@@ -1,0 +1,135 @@
+.chat-container {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 20px;
+}
+.message {
+    margin-bottom: 15px;
+    padding: 15px;
+    border-radius: 12px;
+    animation: fadeIn 0.3s;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+}
+.user-message {
+    background-color: #007bff;
+    color: white;
+    margin-left: 10%;
+    box-shadow: 0 2px 4px rgba(0,123,255,0.2);
+}
+.ai-message {
+    background-color: #f8f9fa;
+    border: 1px solid #e9ecef;
+    margin-right: 10%;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+}
+.typing-indicator {
+    display: none;
+    padding: 12px;
+    color: #6c757d;
+    font-style: italic;
+    background-color: #f8f9fa;
+    border-radius: 8px;
+    margin: 10px 10% 10px 0;
+}
+#responseArea {
+    min-height: 300px;
+    max-height: 600px;
+    overflow-y: auto;
+    border: 1px solid #dee2e6;
+    border-radius: 8px;
+    padding: 20px;
+    background-color: #ffffff;
+}
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* Стили для Markdown контента */
+.ai-message-content {
+    line-height: 1.6;
+    font-size: 15px;
+    white-space: pre-wrap;
+}
+.ai-message-content h1,
+.ai-message-content h2,
+.ai-message-content h3 {
+    margin-top: 1em;
+    margin-bottom: 0.5em;
+    color: #2c3e50;
+    white-space: normal;
+}
+.ai-message-content h2 {
+    font-size: 1.4em;
+    border-bottom: 2px solid #e9ecef;
+    padding-bottom: 5px;
+}
+.ai-message-content h3 {
+    font-size: 1.2em;
+}
+.ai-message-content strong {
+    font-weight: 600;
+    color: #2c3e50;
+}
+.ai-message-content em {
+    font-style: italic;
+    color: #6c757d;
+}
+.ai-message-content ul,
+.ai-message-content ol {
+    padding-left: 1.5em;
+    margin-bottom: 1em;
+    white-space: normal;
+}
+.ai-message-content li {
+    margin-bottom: 0.3em;
+    white-space: normal;
+}
+.ai-message-content code {
+    background-color: #f8f9fa;
+    padding: 2px 6px;
+    border-radius: 4px;
+    font-family: 'Courier New', monospace;
+    font-size: 0.9em;
+    white-space: pre-wrap;
+}
+.ai-message-content pre {
+    background-color: #f8f9fa;
+    padding: 15px;
+    border-radius: 8px;
+    overflow-x: auto;
+    margin: 1em 0;
+    white-space: pre-wrap;
+}
+.ai-message-content blockquote {
+    border-left: 4px solid #007bff;
+    padding-left: 1em;
+    margin-left: 0;
+    color: #6c757d;
+    font-style: italic;
+    white-space: normal;
+}
+
+/* Адаптивность для мобильных устройств */
+@media (max-width: 768px) {
+    .user-message {
+        margin-left: 5%;
+    }
+    .ai-message {
+        margin-right: 5%;
+    }
+    .chat-container {
+        padding: 15px;
+    }
+    #responseArea {
+        min-height: 250px;
+        max-height: 500px;
+    }
+}
+
+.controls {
+    display: flex;
+    gap: 10px;
+    margin-top: 15px;
+}
