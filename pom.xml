@@ -5,14 +5,14 @@
 	<parent>
 		<groupId>org.springframework.boot</groupId>
 		<artifactId>spring-boot-starter-parent</artifactId>
-		<version>3.5.0</version>
-		<relativePath/> <!-- lookup parent from repository -->
+		<version>3.5.6</version>
+		<relativePath/>
 	</parent>
 	<groupId>ru.kiyari.ai</groupId>
 	<artifactId>bina</artifactId>
-	<version>0.0.1-SNAPSHOT</version>
+	<version>0.0.1</version>
 	<name>bina</name>
-	<description>AI Project</description>
+	<description>AI helper bot</description>
 	<url/>
 	<licenses>
 		<license/>
@@ -27,12 +27,13 @@
 		<url/>
 	</scm>
 	<properties>
-		<java.version>17</java.version>
+		<java.version>21</java.version>
+		<spring-ai.version>1.1.0-M3</spring-ai.version>
 	</properties>
 	<dependencies>
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter-web</artifactId>
+			<artifactId>spring-boot-starter-webflux</artifactId>
 		</dependency>
 
 		<dependency>
@@ -40,15 +41,22 @@
 			<artifactId>lombok</artifactId>
 			<optional>true</optional>
 		</dependency>
+
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-test</artifactId>
 			<scope>test</scope>
 		</dependency>
+
 		<dependency>
-			<groupId>dev.langchain4j</groupId>
-			<artifactId>langchain4j-open-ai</artifactId>
-			<version>1.0.1</version>
+			<groupId>org.springframework.ai</groupId>
+			<artifactId>spring-ai-starter-model-deepseek</artifactId>
+			<version>${spring-ai.version}</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-actuator</artifactId>
 		</dependency>
 	</dependencies>
 
@@ -79,6 +87,7 @@
 				</configuration>
 			</plugin>
 		</plugins>
+		<finalName>bina</finalName>
 	</build>
 
 </project>
