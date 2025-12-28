@@ -4,9 +4,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import ru.kiyari.ai.bina.service.EnhancedVoiceActivationService;
 
 import java.util.HashMap;
@@ -50,5 +48,26 @@ public class VoiceActivationController {
         status.put("service", "voice-activation");
         status.put("available", true);
         return ResponseEntity.ok(status);
+    }
+
+    @PostMapping("/test-command")
+    public ResponseEntity<Map<String, Object>> testCommand(@RequestBody Map<String, String> request) {
+        String command = request.get("command");
+
+        if (command == null || command.trim().isEmpty()) {
+            return ResponseEntity.badRequest().body(
+                    Map.of("error", "Command is required")
+            );
+        }
+
+        // Имитируем обработку команды
+        log.info("Test command received: {}", command);
+
+        Map<String, Object> response = new HashMap<>();
+        response.put("command", command);
+        response.put("processed", true);
+        response.put("timestamp", System.currentTimeMillis());
+
+        return ResponseEntity.ok(response);
     }
 }
