@@ -25,26 +25,22 @@ public class VoskConfig {
     public Model voskModel() throws IOException {
         log.info("Attempting to load Vosk model from path: {}", modelPath);
 
-        // Вариант 1: Прямой путь к файлу
         File modelFile = new File(modelPath);
         log.info("Absolute path from File: {}", modelFile.getAbsolutePath());
 
-        // Вариант 2: Путь относительно classpath
         Resource resource = new ClassPathResource(modelPath);
         log.info("ClassPathResource exists: {}", resource.exists());
         log.info("ClassPathResource URL: {}", resource.getURL());
 
-        // Вариант 3: Путь относительно текущей директории
         Path currentDirPath = Paths.get("").toAbsolutePath();
         log.info("Current directory: {}", currentDirPath);
 
-        // Проверяем несколько возможных расположений
         String[] possibleLocations = {
-                modelPath, // как указано
-                "src/main/resources/" + modelPath, // в исходниках
-                "target/classes/" + modelPath, // в собранном проекте
-                currentDirPath.resolve(modelPath).toString(), // относительно текущей директории
-                System.getProperty("user.dir") + "/" + modelPath // абсолютный путь
+                modelPath,
+                "src/main/resources/" + modelPath,
+                "target/classes/" + modelPath,
+                currentDirPath.resolve(modelPath).toString(),
+                System.getProperty("user.dir") + "/" + modelPath
         };
 
         for (String location : possibleLocations) {
@@ -53,7 +49,6 @@ public class VoskConfig {
             if (locationFile.exists()) {
                 log.info("Found model at: {}", locationFile.getAbsolutePath());
 
-                // Выводим содержимое директории для отладки
                 if (locationFile.isDirectory()) {
                     log.info("Directory contents:");
                     File[] files = locationFile.listFiles();
@@ -76,7 +71,6 @@ public class VoskConfig {
             }
         }
 
-        // Если ничего не найдено, создаем инструкцию
         throw new IOException("""
             ❌ Vosk model not found!
             

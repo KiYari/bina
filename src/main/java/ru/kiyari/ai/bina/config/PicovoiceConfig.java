@@ -21,7 +21,6 @@ public class PicovoiceConfig {
 
     @Bean
     public Porcupine porcupine() throws PorcupineException, IOException {
-        // 1. Читаем файл из resources как InputStream
         InputStream inputStream = getClass().getClassLoader()
                 .getResourceAsStream("heybina.ppn");
 
@@ -29,16 +28,12 @@ public class PicovoiceConfig {
             throw new FileNotFoundException("Keyword file not found: heybina.ppn");
         }
 
-        // 2. Создаем временный файл на диске
         File tempFile = File.createTempFile("keyword_", ".ppn");
 
-        // 3. Копируем данные
         Files.copy(inputStream, tempFile.toPath(), StandardCopyOption.REPLACE_EXISTING);
 
-        // 4. Удаляем при завершении
         tempFile.deleteOnExit();
 
-        // 5. Передаем путь к временному файлу
         String filePath = tempFile.getAbsolutePath();
 
         return new Porcupine.Builder()
