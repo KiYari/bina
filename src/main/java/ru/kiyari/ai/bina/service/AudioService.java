@@ -1,6 +1,5 @@
 package ru.kiyari.ai.bina.service;
 
-import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
@@ -13,8 +12,9 @@ import java.util.concurrent.atomic.AtomicBoolean;
 @Service
 public class AudioService {
 
-    @Getter
-    public static final int SAMPLE_RATE = 16000;
+
+    private static final int SAMPLE_RATE = 16000;
+    private static final int FRAME_LENGTH = 512;
 
     private TargetDataLine microphone;
     private final AtomicBoolean isMicrophoneInitialized = new AtomicBoolean(false);
@@ -101,5 +101,13 @@ public class AudioService {
 
     public boolean isMicrophoneOpen() {
         return microphone != null && microphone.isOpen() && isMicrophoneInitialized.get();
+    }
+
+    public static int getSampleRate() {
+        return SAMPLE_RATE;
+    }
+
+    public static int getFrameLength() {
+        return FRAME_LENGTH;
     }
 }

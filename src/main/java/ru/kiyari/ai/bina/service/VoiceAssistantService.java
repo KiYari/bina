@@ -77,7 +77,7 @@ public class VoiceAssistantService {
                     continue;
                 }
 
-                short[] audioFrame = audioService.readAudioFrameAsShort(AudioService.SAMPLE_RATE);
+                short[] audioFrame = audioService.readAudioFrameAsShort(AudioService.getFrameLength());
 
                 if (audioFrame.length > 0 && picovoiceService.detectWakeWord(audioFrame)) {
                     log.info("🎯 Wake word обнаружен!");
