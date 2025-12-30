@@ -4,6 +4,9 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import javax.sound.sampled.*;
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -15,9 +18,12 @@ public class AudioService {
 
     private static final int SAMPLE_RATE = 16000;
     private static final int FRAME_LENGTH = 512;
+    private static final int BUFFER_SIZE = 4096;
 
     private TargetDataLine microphone;
+    private SourceDataLine speaker;
     private final AtomicBoolean isMicrophoneInitialized = new AtomicBoolean(false);
+    private final AtomicBoolean isPlaying = new AtomicBoolean(false);
 
     public void initializeMicrophone() throws LineUnavailableException {
         if (isMicrophoneInitialized.get()) {
@@ -97,6 +103,111 @@ public class AudioService {
         }
         isMicrophoneInitialized.set(false);
         log.info("Microphone closed");
+    }
+
+    public void playWavAudio(byte[] audioData) throws UnsupportedAudioFileException, IOException, LineUnavailableException {
+        if (isPlaying.get()) {
+            log.warn("Audio is already playing");
+            return;
+        }
+
+        isPlaying.set(true);
+
+        try (ByteArrayInputStream bais = new ByteArrayInputStream(audioData);
+             AudioInputStream audioStream = AudioSystem.getAudioInputStream(bais)) {
+
+            AudioFormat format = audioStream.getFormat();
+            log.info("Audio format: {}, channels: {}, sample rate: {}, sample size: {} bits",
+                    format.getEncoding(), format.getChannels(),
+                    format.getSampleRate(), format.getSampleSizeInBits());
+
+            DataLine.Info info = new DataLine.Info(SourceDataLine.class, format);
+
+            if (!AudioSystem.isLineSupported(info)) {
+                log.error("Line not supported for format: {}", format);
+                throw new LineUnavailableException("Audio format not supported");
+            }
+
+            speaker = (SourceDataLine) AudioSystem.getLine(info);
+            speaker.open(format);
+            speaker.start();
+
+            byte[] buffer = new byte[BUFFER_SIZE];
+            int bytesRead;
+
+            while (isPlaying.get() && (bytesRead = audioStream.read(buffer)) != -1) {
+                speaker.write(buffer, 0, bytesRead);
+            }
+
+            speaker.drain();
+            speaker.stop();
+
+        } finally {
+            if (speaker != null) {
+                speaker.close();
+                speaker = null;
+            }
+            isPlaying.set(false);
+        }
+    }
+
+    public void playWavAudio(InputStream audioStream) throws UnsupportedAudioFileException, IOException, LineUnavailableException {
+        if (isPlaying.get()) {
+            log.warn("Audio is already playing");
+            return;
+        }
+
+        isPlaying.set(true);
+
+        try (AudioInputStream audioInputStream = AudioSystem.getAudioInputStream(audioStream)) {
+
+            AudioFormat format = audioInputStream.getFormat();
+            log.info("Audio format: {}, channels: {}, sample rate: {}, sample size: {} bits",
+                    format.getEncoding(), format.getChannels(),
+                    format.getSampleRate(), format.getSampleSizeInBits());
+
+            DataLine.Info info = new DataLine.Info(SourceDataLine.class, format);
+
+            if (!AudioSystem.isLineSupported(info)) {
+                log.error("Line not supported for format: {}", format);
+                throw new LineUnavailableException("Audio format not supported");
+            }
+
+            speaker = (SourceDataLine) AudioSystem.getLine(info);
+            speaker.open(format);
+            speaker.start();
+
+            byte[] buffer = new byte[BUFFER_SIZE];
+            int bytesRead;
+
+            while (isPlaying.get() && (bytesRead = audioInputStream.read(buffer)) != -1) {
+                speaker.write(buffer, 0, bytesRead);
+            }
+
+            speaker.drain();
+            speaker.stop();
+
+        } finally {
+            if (speaker != null) {
+                speaker.close();
+                speaker = null;
+            }
+            isPlaying.set(false);
+        }
+    }
+
+    public void stopPlayback() {
+        isPlaying.set(false);
+        if (speaker != null) {
+            speaker.stop();
+            speaker.close();
+            speaker = null;
+        }
+        log.info("Playback stopped");
+    }
+
+    public boolean isPlaying() {
+        return isPlaying.get();
     }
 
     public boolean isMicrophoneOpen() {

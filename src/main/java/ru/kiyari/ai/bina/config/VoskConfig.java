@@ -71,39 +71,7 @@ public class VoskConfig {
             }
         }
 
-        throw new IOException("""
-            ❌ Vosk model not found!
-            
-            Требуемый путь: %s
-            
-            Проверьте:
-            1. Распакована ли модель в папку?
-               - Исходный ZIP: vosk-model-ru-0.42.zip
-               - После распаковки должна быть папка с содержимым
-              
-            2. Правильная структура папки модели:
-               models/vosk/
-               ├── am/
-               │   ├── final.mdl
-               │   └── ...
-               ├── conf/
-               │   ├── mfcc.conf
-               │   └── ...
-               ├── graph/
-               │   ├── HCLr.fst
-               │   └── ...
-               └── ivector/
-                   └── ...
-            
-            3. Расположение модели:
-               - Разработка: src/main/resources/models/vosk/
-               - Сборка: target/classes/models/vosk/
-            
-            4. Скачайте модель если отсутствует:
-               wget https://alphacephei.com/vosk/models/vosk-model-ru-0.42.zip
-               unzip vosk-model-ru-0.42.zip -d src/main/resources/models/
-               переименуйте: vosk-model-ru-0.42 -> vosk
-            """.formatted(modelPath));
+        throw new IOException("❌ Vosk model not found!");
     }
 
     @Bean
